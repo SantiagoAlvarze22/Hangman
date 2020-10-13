@@ -33,6 +33,40 @@ function displayWord() {
   }
 }
 
+//update wrong letters
+function updateWrongLettersEl() {
+  console.log(updateWrongLettersEl)
+}
+
+//show notification 
+function showNotification() {
+  notificaton.classList.add('show')
+
+  setTimeout(() => {
+    notificaton.classList.remove('show');
+  }, 2000)
+}
+
+//keydown letter press
+window.addEventListener('keydown', e => {
+  //console.log(e.keyCode)
+  if (e.keyCode >= 65 && e.keyCode <= 90) {
+    const letter = e.key;
+    if (selectedWord.includes(letter)) {
+      correctLetters.push(letter);
+      displayWord()
+    } else {
+      showNotification();
+    }
+  } else {
+    if (!wrongLetters.includes(letter)) {
+      wrongLetters.push(letter)
+      updateWrongLettersEl()
+    } else {
+      showNotification()
+    }
+  }
+})
 
 displayWord();
 
