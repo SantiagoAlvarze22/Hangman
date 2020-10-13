@@ -1,0 +1,15 @@
+:root {
+  --color-white: #fff;
+}
+
+body {
+  background-color: #34495e;
+  color: var(--color-white);
+}
+
+.figure-container {
+  fill: transparent;
+  stroke: var(--color-white);
+  stroke-width: 4px;
+  stroke-linecap: round;
+}
