@@ -1,10 +1,10 @@
 const wordEl = document.getElementById('word');
 const wrongLettersEl = document.getElementById('wrong-letters');
-const playAgainBtn = document.getElementById('play-again')
+const playAgainBtn = document.getElementById('play-button')
 const popup = document.getElementById('popup-container')
 const notificaton = document.getElementById('notification-container')
 const finalMessage = document.getElementById('final-message')
-const figureParts = document.getElementById('.figure-part')
+const figureParts = document.querySelectorAll('.figure-part')
 
 const words = ['application', 'programming', 'interface', 'wizard'];
 
@@ -35,7 +35,27 @@ function displayWord() {
 
 //update wrong letters
 function updateWrongLettersEl() {
-  console.log(updateWrongLettersEl)
+  wrongLettersEl.innerHTML = `
+    ${wrongLetters.length > 0 ? '<p>Wrong</p>' : ''}
+    ${wrongLetters.map(letter => `<span>${letter}</span>`)}
+  `;
+
+  //display parts
+  figureParts.forEach((part, index) => {
+    const errors = wrongLetters.length;
+
+    if (index < errors) {
+      part.style.display = 'block';
+    } else {
+      part.style.display = 'none'
+    }
+  })
+
+  //check if lost
+  if (wrongLetters.length === figureParts.length) {
+    finalMessage.innerText = 'Unfortunately you lost'
+    popup.style.display = "flex"
+  }
 }
 
 //show notification 
@@ -53,21 +73,35 @@ window.addEventListener('keydown', e => {
   if (e.keyCode >= 65 && e.keyCode <= 90) {
     const letter = e.key;
     if (selectedWord.includes(letter)) {
-      correctLetters.push(letter);
-      displayWord()
+      if (!correctLetters.includes(letter)) {
+        correctLetters.push(letter);
+        displayWord()
+      } else {
+        showNotification();
+      }
     } else {
-      showNotification();
-    }
-  } else {
-    if (!wrongLetters.includes(letter)) {
-      wrongLetters.push(letter)
-      updateWrongLettersEl()
-    } else {
-      showNotification()
+      if (!wrongLetters.includes(letter)) {
+        wrongLetters.push(letter)
+        updateWrongLettersEl()
+      } else {
+        showNotification()
+      }
     }
   }
 })
 
-displayWord();
+//rRestart game and oplay again
+playAgainBtn.addEventListener('click', () => {
+  //empty array
+  correctLetters.splice(0);
+  wrongLetters.splice(0);
 
-console.log(selectedWord) 
+  selectedWord = words[Math.floor(Math.random() * words.length)]
+
+  displayWord();
+  updateWrongLettersEl()
+
+  popup.style.display = 'none'
+})
+
+displayWord();
